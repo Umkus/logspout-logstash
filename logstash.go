@@ -13,7 +13,7 @@ import (
 	"github.com/gliderlabs/logspout/router"
 	"github.com/rcrowley/go-metrics"
 	"github.com/rcrowley/go-metrics/exp"
-	"github.com/udacity/logspout-logstash/multiline"
+	"github.com/umkus/logspout-logstash/multiline"
 )
 
 var (
@@ -241,11 +241,6 @@ func serialize(msg *router.Message) ([]byte, error) {
 		Image:    msg.Container.Config.Image,
 		Hostname: msg.Container.Config.Hostname,
 	}
-	udacityInfo := UdacityInfo{
-		Name:    msg.Container.Config.Labels["com.udacity.name"],
-		Version: msg.Container.Config.Labels["com.udacity.version"],
-		Env:     msg.Container.Config.Labels["com.udacity.env"],
-	}
 
 	err := json.Unmarshal([]byte(msg.Data), &jsonMsg)
 
@@ -254,7 +249,6 @@ func serialize(msg *router.Message) ([]byte, error) {
 		msg := LogstashMessage{
 			Message: msg.Data,
 			Docker:  dockerInfo,
-			Udacity: udacityInfo,
 			Stream:  msg.Source,
 		}
 		js, err = json.Marshal(msg)
@@ -264,7 +258,6 @@ func serialize(msg *router.Message) ([]byte, error) {
 	} else {
 		// the message is already in JSON just add the docker specific fields as a nested structure
 		jsonMsg["docker"] = dockerInfo
-		jsonMsg["udacity"] = udacityInfo
 
 		js, err = json.Marshal(jsonMsg)
 		if err != nil {
@@ -282,18 +275,11 @@ type DockerInfo struct {
 	Hostname string `json:"hostname"`
 }
 
-type UdacityInfo struct {
-	Name    string `json:"name"`
-	Env     string `json:"env"`
-	Version string `json:"version"`
-}
-
 // LogstashMessage is a simple JSON input to Logstash.
 type LogstashMessage struct {
 	Message string      `json:"message"`
 	Stream  string      `json:"stream"`
 	Docker  DockerInfo  `json:"docker"`
-	Udacity UdacityInfo `json:"udacity"`
 }
 
 // writers

@@ -1,11 +1,8 @@
 # logspout-logstash
-[![CircleCI](https://circleci.com/gh/udacity/logspout-logstash.svg?style=svg&ts=0)](https://circleci.com/gh/udacity/logspout-logstash)
-[![Coverage Status](https://coveralls.io/repos/github/udacity/logspout-logstash/badge.svg?branch=master&ts=0)](https://coveralls.io/github/udacity/logspout-logstash?branch=master)
 
 A minimalistic adapter for github.com/gliderlabs/logspout to write to Logstash TCP.  Supports
 
 * multi-line log grouping
-* udacity metadata
 
 Log lines identified as JSON preserve the app-specific fields when shipped to Logstash.
 
@@ -13,7 +10,7 @@ Follow the instructions in https://github.com/gliderlabs/logspout/tree/master/cu
 
 ```
 import (
-  _ "github.com/udacity/logspout-logstash"
+  _ "github.com/umkus/logspout-logstash"
   _ "github.com/gliderlabs/logspout/transports/udp"
 )
 ```
